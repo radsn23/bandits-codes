@@ -13,9 +13,11 @@ Bandits codes for algorithms like UCB,TS etc. and analyses written by me. Could 
 bandits-codes
 ├── README.md
 ├── bandit_rl_implementations
+│   ├── MAB_TS_email.py
+│   ├── MAB_TS_posteriors.png
 │   ├── TS_loss.png
-│   ├── conbandits_TS.py
-│   └── TSloss_ER.png
+│   ├── TSloss_ER.png
+│   └── conbandits_TS.py
 └── louie_experiments
     ├── LinUCB.py
     ├── bandit_data_format.py
