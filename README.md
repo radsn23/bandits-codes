@@ -14,7 +14,7 @@ bandits-codes
 ├── bandit_rl_implementations
 │   ├── TS_loss.png
 │   ├── conbandits_TS.py
-│   └── figure_1.png
+│   └── TSloss_ER.png
 └── louie_experiments
     ├── LinUCB.py
     ├── bandit_data_format.py
