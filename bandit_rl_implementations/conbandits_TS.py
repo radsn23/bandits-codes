@@ -6,6 +6,12 @@ import inspect
 import seaborn as sns
 np.random.seed(23)
 
+"""
+An implementation of An Empirical Evaluation of Thompson Sampling - O Chappelle and Lihong Li
+NIPS'11 Proceedings of the 24th International Conference on Neural Information Processing Systems
+(https://papers.nips.cc/paper/4321-an-empirical-evaluation-of-thompson-sampling.pdf)
+"""
+
 class CB_TS_Logistic:
 	def __init__(self,l,versions,d,w=None):
 		self.l=l
@@ -19,13 +25,13 @@ class CB_TS_Logistic:
 		self.w = np.random.normal(self.m, self.q**(-1),size= d)
 		return self.w
 
-	def arm_select(self,x,w):
+	def choose_version(self,x,w):
 		scores = np.zeros(self.versions)
-		for i in range(scores.shape[0]):
+		for i in range((self.versions)):
 
-			x[self.d - self.versions + i] = 1
+			x[X_size + i] = 1
 			scores[i] = generate_data.logprob(self,x,w)[1]
-			x[self.d - self.versions + i] = 0
+			x[X_size + i] = 0
 		return scores.argmax()
 	
 	def get_batch(self,x,version):
@@ -70,8 +76,8 @@ class generate_data:
 if __name__== "__main__":
 	
 	fig = plt.figure(figsize=(10, 6))
-	ax = fig.add_subplot(1, 1, 1)
-
+	ax1 = fig.add_subplot(2, 1, 1)
+	ax2 = fig.add_subplot(2,1,2)
 	T = 100 
 	N = 10 #number of batches
 	versions = 3 #or the number of arms of the bandit
@@ -82,9 +88,10 @@ if __name__== "__main__":
 	d = X_size + versions + versions*X_size 
 	w= np.random.normal(d) #Initialising the weights
 	chosen_versions = np.zeros(T*N)
-	chosen_rewards = np.zeros(T*N)
+	obtained_rewards = np.zeros(T*N)
 	t_array=[]
 	loss_array=[]
+	expected_reward=[]
 	data = generate_data(d,X_size,w)
 	cbts = CB_TS_Logistic(l,versions,d,w)
 
@@ -95,26 +102,32 @@ if __name__== "__main__":
 
 		for n in range(N):
 			X[n] = data.get_X()
-			weights = cbts.generate_weights()
-			vers = cbts.arm_select(X[n],weights)
-			X[n] = cbts.get_batch(X[n],vers)
-			y[n] = data.get_y(X[n],weights)
+			weights = cbts.generate_weights() #Generate a prior on weights
+			vers = cbts.choose_version(X[n],weights)	#From that distr, choose versions
+			X[n] = cbts.get_batch(X[n],vers)		#Form a batch, with X, chosen arm, and rewards
+			y[n] = data.get_y(X[n],weights)			# Get the rewards for each chosen arm using logprob.
 			chosen_versions[t*N + n] = vers
 		loss= cbts.generate_loss(weights,X,y)
 		t_array.append(t)
-		loss_array.append(loss)
-			
-		cbts.param_update(X,y)
-		chosen_rewards[t*N:(t+1)*N] = y
-
-
-plt.plot(np.linspace(0,T,len(loss_array)),loss_array)
-ax.set_ylabel('loss')
-ax.set_xlabel('time')
+		loss_array.append(loss)	
+		cbts.param_update(X,y)						#Update q,m to update the weights dis
+		obtained_rewards[t*N:(t+1)*N] = y 			#store all the rewards, they should get better (=1) over iterations
+		er = np.sum(obtained_rewards)/t
+		expected_reward.append(er)	
+#Plot of loss function
+plt.subplot(2,1,1)
+plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
+plt.subplot(2,1,2)
+plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it dip in the start?')
+#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
+ax1.set_ylabel('Loss')
+ax1.set_xlabel('Time')
+ax1.legend()
+ax2.set_ylabel('Expected Reward')
+ax2.legend()
+ax2.set_xlabel('Time')
 plt.show()
-
-print("score:{}".format(chosen_rewards[chosen_rewards==1].shape[0]/float(chosen_rewards.shape[0])))		
-
+	
 
 
 
