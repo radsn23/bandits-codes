@@ -8,6 +8,7 @@ Bandits codes contributed by [Louie Hoang](https://www.microsoft.com/en-us/resea
 ### * bandit_rl_implementations
 Bandits codes for algorithms like UCB,TS etc. and analyses written by me. Could include implementations of papers and tutorials.
 
+#### Directory Structure
 ```
 bandits-codes
 ├── README.md

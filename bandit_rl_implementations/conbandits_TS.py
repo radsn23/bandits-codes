@@ -115,19 +115,19 @@ if __name__== "__main__":
 		er = np.sum(obtained_rewards)/t
 		expected_reward.append(er)	
 		
-		#Plot of loss function
-		plt.subplot(2,1,1)
-		plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
-		plt.subplot(2,1,2)
-		plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it dip in the start?')
-		#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
-		ax1.set_ylabel('Loss')
-		ax1.set_xlabel('Time')
-		ax1.legend()
-		ax2.set_ylabel('Expected Reward')
-		ax2.legend()
-		ax2.set_xlabel('Time')
-		plt.show()
+	#Plot of loss function
+	plt.subplot(2,1,1)
+	plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
+	plt.subplot(2,1,2)
+	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it dip in the start?')
+	#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
+	ax1.set_ylabel('Loss')
+	ax1.set_xlabel('Time')
+	ax1.legend()
+	ax2.set_ylabel('Expected Reward')
+	ax2.legend()
+	ax2.set_xlabel('Time')
+	plt.show()
 			
 
 
