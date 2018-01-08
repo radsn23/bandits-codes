@@ -17,8 +17,8 @@ bandits-codes
 │   ├── CBThompsonSampling_LogisticReg.py
 │   ├── MAB_TS_posteriors.png
 │   ├── TS_Loss_ER.png
-│   ├── versions=10.png
-│   └── versions=3.png
+│   ├── versions=10_ignore_regret.png
+│   └── versions=3,T=1000.png
 └── louie_experiments
     ├── LinUCB.py
     ├── bandit_data_format.py
