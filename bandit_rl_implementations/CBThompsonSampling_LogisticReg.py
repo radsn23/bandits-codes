@@ -91,10 +91,12 @@ if __name__== "__main__":
 	ax1 = fig.add_subplot(331)
 	ax2 = fig.add_subplot(334)
 	ax3 = fig.add_subplot(337)
+	ax4 = fig.add_subplot(332)
+	ax5 = fig.add_subplot(333)
 	
-	alphas = [1,0.25,0.5]
+	alphas = [1,0.75,2]
 	for a in alphas:
-		T = 10 
+		T = 1000 
 		N = 10 #number of batches
 		versions = 3 #or the number of arms of the bandit
 		l=0.1 #lambda
@@ -156,6 +158,10 @@ if __name__== "__main__":
 	ax3.set_ylabel('Regret')
 	ax3.legend()
 	ax3.set_xlabel('Time')
+	ax1.set_title('alpha = 1')
+	ax4.set_title('alpha = 0.75')
+	ax5.set_title('alpha = 2')
+	fig.tight_layout()
 	plt.show()
 			
 

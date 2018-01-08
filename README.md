@@ -16,7 +16,9 @@ bandits-codes
 │   ├── Bandits_email_version.py
 │   ├── CBThompsonSampling_LogisticReg.py
 │   ├── MAB_TS_posteriors.png
-│   └── TS_Loss_ER.png
+│   ├── TS_Loss_ER.png
+│   ├── versions=10.png
+│   └── versions=3.png
 └── louie_experiments
     ├── LinUCB.py
     ├── bandit_data_format.py
@@ -49,6 +51,5 @@ bandits-codes
     ├── thompson_policy.py
     ├── two_factor_reward.py
     └── ucb1.py
-
 
 ```
