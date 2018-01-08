@@ -119,7 +119,7 @@ if __name__== "__main__":
 	plt.subplot(2,1,1)
 	plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
 	plt.subplot(2,1,2)
-	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it dip in the start?')
+	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it spike in the start?')
 	#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
 	ax1.set_ylabel('Loss')
 	ax1.set_xlabel('Time')
