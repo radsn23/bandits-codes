@@ -16,8 +16,7 @@ bandits-codes
 │   ├── Bandits_email_version.py
 │   ├── CBThompsonSampling_LogisticReg.py
 │   ├── MAB_TS_posteriors.png
-│   ├── TS_loss.png
-│   └── TSloss_ExRe.png
+│   └── TS_Loss_ER.png
 └── louie_experiments
     ├── LinUCB.py
     ├── bandit_data_format.py

@@ -22,7 +22,7 @@ class CB_TS_Logistic:
 		self.versions=versions
 
 	def generate_weights(self):
-		self.w = np.random.normal(self.m, self.q**(-1),size= d)
+		self.w = np.random.normal(self.m, self.q**(-1/2),size= d)
 		return self.w
 
 	def choose_version(self,x,w):
@@ -78,7 +78,7 @@ if __name__== "__main__":
 	fig = plt.figure(figsize=(10, 6))
 	ax1 = fig.add_subplot(2, 1, 1)
 	ax2 = fig.add_subplot(2,1,2)
-	T = 100 
+	T = 500 
 	N = 10 #number of batches
 	versions = 3 #or the number of arms of the bandit
 	l=0.1 #lambda
@@ -112,14 +112,14 @@ if __name__== "__main__":
 		loss_array.append(loss)	
 		cbts.param_update(X,y)						#Update q,m to update the weights dis
 		obtained_rewards[t*N:(t+1)*N] = y 			#store all the rewards, they should get better (=1) over iterations
-		er = np.sum(obtained_rewards)/t
+		er = np.sum(obtained_rewards)/((t+1)*N)
 		expected_reward.append(er)	
-		
+			
 	#Plot of loss function
 	plt.subplot(2,1,1)
 	plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
 	plt.subplot(2,1,2)
-	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Why does it spike in the start?')
+	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Expected Reward')
 	#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
 	ax1.set_ylabel('Loss')
 	ax1.set_xlabel('Time')
