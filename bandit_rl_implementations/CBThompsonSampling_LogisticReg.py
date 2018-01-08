@@ -4,6 +4,7 @@ import math
 from scipy.optimize import minimize
 import inspect
 import seaborn as sns
+import decimal
 np.random.seed(23)
 
 """
@@ -20,9 +21,10 @@ class CB_TS_Logistic:
 		self.m = np.zeros(d)
 		self.q = np.ones(d)*l
 		self.versions=versions
+		
 
-	def generate_weights(self):
-		self.w = np.random.normal(self.m, self.q**(-1/2),size= d)
+	def generate_weights(self,a):
+		self.w = np.random.normal(self.m, a*self.q**(-1/2),size= d)
 		return self.w
 
 	def choose_version(self,x,w):
@@ -32,7 +34,17 @@ class CB_TS_Logistic:
 			x[X_size + i] = 1
 			scores[i] = generate_data.logprob(self,x,w)[1]
 			x[X_size + i] = 0
+		self.scores=scores	
 		return scores.argmax()
+
+	def get_regret(self,x,w,vers,regret):
+		#the best arm is 2?
+		if vers!=2:	
+			#global regret
+			regret+=1
+		return regret	
+
+
 	
 	def get_batch(self,x,version):
 		x[X_size + version] = 1
@@ -47,7 +59,7 @@ class CB_TS_Logistic:
  	
 	def param_update(self,X,y):	
 		self.m = minimize(self.generate_loss,self.w,args=(X,y)).x
-		P = (1 + np.exp(-1 * X.dot(self.m))) ** (-1) #Laplace Approximation
+		P = 1/(1 + np.exp(-1 * X.dot(self.m)))  #Laplace Approximation
 		self.q = self.q + (P*(1-P)).dot(X ** 2)
 					
 
@@ -76,57 +88,74 @@ class generate_data:
 if __name__== "__main__":
 	
 	fig = plt.figure(figsize=(10, 6))
-	ax1 = fig.add_subplot(2, 1, 1)
-	ax2 = fig.add_subplot(2,1,2)
-	T = 500 
-	N = 10 #number of batches
-	versions = 3 #or the number of arms of the bandit
-	l=0.1 #lambda
-	X_size = 3 
+	ax1 = fig.add_subplot(331)
+	ax2 = fig.add_subplot(334)
+	ax3 = fig.add_subplot(337)
+	
+	alphas = [1,0.25,0.5]
+	for a in alphas:
+		T = 10 
+		N = 10 #number of batches
+		versions = 3 #or the number of arms of the bandit
+		l=0.1 #lambda
+		X_size = 3 
+		#global regret
+		regret=0
+		# The set of past observations is made of triplets (x_i,a_i,r_i), so the dimension of the observation is-
+		d = X_size + versions + versions*X_size 
+		w= np.random.normal(d) #Initialising the weights
+		chosen_versions = np.zeros(T*N)
+		obtained_rewards = np.zeros(T*N)
+		t_array=[]
+		loss_array=[]
+		expected_reward=[]
+		data = generate_data(d,X_size,w)
+		cbts = CB_TS_Logistic(l,versions,d,w)
+		regrets = []
+		for t in range(T):
 
-	# The set of past observations is made of triplets (x_i,a_i,r_i), so the dimension of the observation is-
-	d = X_size + versions + versions*X_size 
-	w= np.random.normal(d) #Initialising the weights
-	chosen_versions = np.zeros(T*N)
-	obtained_rewards = np.zeros(T*N)
-	t_array=[]
-	loss_array=[]
-	expected_reward=[]
-	data = generate_data(d,X_size,w)
-	cbts = CB_TS_Logistic(l,versions,d,w)
-
-	for t in range(T):
-
-		X = np.zeros((N,d))
-		y = np.zeros(N)
-
-		for n in range(N):
-			X[n] = data.get_X()
-			weights = cbts.generate_weights() #Generate a prior on weights
-			vers = cbts.choose_version(X[n],weights)	#From that distr, choose versions
-			X[n] = cbts.get_batch(X[n],vers)		#Form a batch, with X, chosen arm, and rewards
-			y[n] = data.get_y(X[n],weights)			# Get the rewards for each chosen arm using logprob.
-			chosen_versions[t*N + n] = vers
-		loss= cbts.generate_loss(weights,X,y)
-		t_array.append(t)
-		loss_array.append(loss)	
-		cbts.param_update(X,y)						#Update q,m to update the weights dis
-		obtained_rewards[t*N:(t+1)*N] = y 			#store all the rewards, they should get better (=1) over iterations
-		er = np.sum(obtained_rewards)/((t+1)*N)
-		expected_reward.append(er)	
+			X = np.zeros((N,d))
+			y = np.zeros(N)
 			
-	#Plot of loss function
-	plt.subplot(2,1,1)
-	plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
-	plt.subplot(2,1,2)
-	plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Expected Reward')
-	#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
+			for n in range(N):
+				X[n] = data.get_X()
+				weights = cbts.generate_weights(a) #Generate a prior on weights
+				#print(data.logprob(X[n],weights))
+				vers = cbts.choose_version(X[n],weights)	#From that distr, choose versions
+				
+				X[n] = cbts.get_batch(X[n],vers)		#Form a batch, with X, chosen arm, and rewards
+				y[n] = data.get_y(X[n],weights)			# Get the rewards for each chosen arm using logprob.
+			chosen_versions[t*N + n] = vers
+			regret = cbts.get_regret(X,weights,vers,regret)
+			regrets.append(regret/((t+1)*N))
+			loss= cbts.generate_loss(weights,X,y)
+			#print(vers)
+			
+			t_array.append(t)
+			loss_array.append(loss)	
+			cbts.param_update(X,y)						#Update q,m to update the weights dis
+			obtained_rewards[t*N:(t+1)*N] = y 			#store all the rewards, they should get better (=1) over iterations
+			er = np.sum(obtained_rewards)/((t+1)*N)
+			expected_reward.append(er)	
+				
+		#Plot of loss function
+		k = alphas.index(a)+1
+		plt.subplot(3,3,k)
+		plt.plot(np.linspace(0,T,len(loss_array)),loss_array, label='Loss')
+		plt.subplot(3,3,k+3)
+		plt.plot(np.linspace(0,T,len(expected_reward)),expected_reward, color='m', label='Expected Reward')
+		plt.subplot(3,3,k+6)
+		plt.plot(np.linspace(0,T,len(regrets)),regrets, color='r',label='Regret')
+		#ax.scatter(np.linspace(0,T,len(chosen_rewards)),chosen_rewards)
 	ax1.set_ylabel('Loss')
 	ax1.set_xlabel('Time')
 	ax1.legend()
 	ax2.set_ylabel('Expected Reward')
 	ax2.legend()
 	ax2.set_xlabel('Time')
+	ax3.set_ylabel('Regret')
+	ax3.legend()
+	ax3.set_xlabel('Time')
 	plt.show()
 			
 
