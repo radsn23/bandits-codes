@@ -16,31 +16,32 @@ As data is added however, the probability distributions become sharper, and the 
 
 """
 
-class email_mooclet:
-	def __init__(self,versions=None, prior = None):	#Taking in version set and prior as input
-		self.trials = np.zeros((len(versions),), dtype = int)
-		self.successes = np.zeros_like(self.trials)
-		self.versions = versions
-		if prior == None:
-			self.prior = [(1.0,1.0) for i in range(len(versions))]
+	class email_mooclet:
+		def __init__(self,versions=None, prior = None):	#Taking in version set and prior as input
+			self.trials = np.zeros((len(versions),), dtype = int)
+			self.successes = np.zeros_like(self.trials)
+			self.versions = versions
+			if prior == None:
+				self.prior = [(1.0,1.0) for i in range(len(versions))]
 
-	def add_data(self, version_num, success):
-		self.trials[version_num]+= 1
-		if success:
-			self.successes[version_num]+=1		
+		def add_data(self, version_num, success):
+			self.trials[version_num]+= 1
+			if success:
+				self.successes[version_num]+=1		
 
-	def personalize(self):
-		posterior_sample = np.zeros(len(self.versions))
-		x = []
-		params = []
-		for i in range(len(self.versions)):			
-			a = prior[i][0]+ self.successes[i] 			#alpha
-			b = prior[i][1] + self.trials[i] - self.successes[i] 	#beta
-			params.append([a,b])		#appending these parameters for plotting graphs
-			x += [np.linspace(beta.ppf(0.01, a,b), beta.ppf(0.99, a,b), 100)]
-			posterior_sample[i] = np.random.beta(a,b) 	#choosing a random sample from the beta distribution
+		def personalize(self):
+			posterior_sample = np.zeros(len(self.versions))
+			x = []
+			params = []
+			for i in range(len(self.versions)):			
+				a = prior[i][0]+ self.successes[i] 			#alpha
+				b = prior[i][1] + self.trials[i] - self.successes[i] 	#beta
+				params.append([a,b])		#appending these parameters for plotting graphs
+				x += [np.linspace(beta.ppf(0.01, a,b), beta.ppf(0.99, a,b), 100)]
+				posterior_sample[i] = np.random.beta(a,b) 	#choosing a random sample from the beta distribution
 			
-		return np.argmax(posterior_sample),x,params 				#returning the maximum sample's version_id, alongwith a few plotting stuff 
+			return np.argmax(posterior_sample),x,params 				#returning the maximum sample's version_id, alongwith a few plotting stuff 
+
 
 """
 
