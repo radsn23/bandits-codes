@@ -14,7 +14,7 @@ The function personalize is responsible for carrying out this update of the prio
 As data is added however, the probability distributions become sharper, and the samples are more indicative of the actual probabilities of responses.  
 
 
-"""
+
 
 	class email_mooclet:
 		def __init__(self,versions=None, prior = None):	#Taking in version set and prior as input
@@ -43,7 +43,7 @@ As data is added however, the probability distributions become sharper, and the 
 			return np.argmax(posterior_sample),x,params 				#returning the maximum sample's version_id, alongwith a few plotting stuff 
 
 
-"""
+
 
 ## Results
 
@@ -51,7 +51,7 @@ The prior probabilities are plotted below, along with the posteriors obtained af
 
 After adding 1000 data points, the resulting distributions are plotted on the right, where the number on the top shows the starting points. 
 
-[result1](https://raw.githubusercontent.com/radsn23/bandits-codes/bandit_rl_implementations/EmailMAB/MAB_TS_posteriors.png)
+[result1](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/EmailMAB/MAB_TS_posteriors.png)
 
 
 
