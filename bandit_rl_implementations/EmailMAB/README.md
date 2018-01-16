@@ -16,6 +16,7 @@ As data is added however, the probability distributions become sharper, and the 
 
 
 '''python
+
 	class email_mooclet:
 		def __init__(self,versions=None, prior = None):	#Taking in version set and prior as input
 			self.trials = np.zeros((len(versions),), dtype = int)
