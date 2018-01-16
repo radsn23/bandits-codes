@@ -15,7 +15,7 @@ As data is added however, the probability distributions become sharper, and the 
 
 
 
-
+'''python
 	class email_mooclet:
 		def __init__(self,versions=None, prior = None):	#Taking in version set and prior as input
 			self.trials = np.zeros((len(versions),), dtype = int)
@@ -43,7 +43,7 @@ As data is added however, the probability distributions become sharper, and the 
 			return np.argmax(posterior_sample),x,params 				#returning the maximum sample's version_id, alongwith a few plotting stuff 
 
 
-
+'''
 
 ## Results
 
@@ -52,6 +52,12 @@ The prior probabilities are plotted below, along with the posteriors obtained af
 After adding 1000 data points, the resulting distributions are plotted on the right, where the number on the top shows the starting points. 
 
 ![result1](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/EmailMAB/MAB_TS_posteriors.png)
+
+We can see that as the distributions become sharper, the likelihood of each random sample actually representing the actual probability distribution increases.
+
+Since the data in this experiment is taken randomly( where I just select a version at random and add a success or failure to it), the posterior distributions might not actually show a clear winner. In actual simulations with real data, the algorithm will be able to learn which subject line works best.
+
+Alternative to random input: While giving inputs, you can decide which versions you want to give more successes to (in order to simulate an actual distribution of user preferences to versions). In the graphs below, I set the probabilities of success of [‘Survey’, ‘Brief’, ‘Acknowledgement’] to [0.6,0.1,0.3]. The plots obtained were:
 
 
 
