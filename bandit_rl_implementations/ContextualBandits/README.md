@@ -8,12 +8,12 @@ This implementation is of an Associative/Contextual Multi-Armed Bandit problem u
 In this implementation, a Gaussian prior is set on the weights, and the mean and variance is updated each round based on the rewards observed. The rewards are modeled by the formula - 
 
 
-![res1](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/ContextualBandits/Screen Shot 2018-01-19 at 2.21.57 PM.png)
+![res1](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/ContextualBandits/ssc2.png)
 
 
 The distribution is updated using the following algorithm -
 
-![res2](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/ContextualBandits/Screen Shot 2018-01-19 at 1.45.58 PM.png)
+![res2](https://github.com/radsn23/bandits-codes/blob/master/bandit_rl_implementations/ContextualBandits/scf1.png)
 
 *Steps-*
  
