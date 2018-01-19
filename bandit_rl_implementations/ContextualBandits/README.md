@@ -22,7 +22,7 @@ The distribution is updated using the following algorithm -
 3. For each round, minimize negative log likelihood, and find m,q that minimize loss
 4. Substitute m,q into the weight distribution fuction, get rewards.
 
-Changes to make: - Data generation methods and Linear Regression Trial
+**Changes to make: - Data generation methods and Linear Regression Trial**
 
 	1.Currently the Gaussian is serving as both the prior as well as the Thompson Sampling distribution. This is workaround artificial data collection.	
 	Other methods of testing code-
